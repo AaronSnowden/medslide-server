@@ -66,11 +66,13 @@ module.exports = (options = {}) => {
     }
   });
 
-  router.post("/users", (req, res) => {
+  //add new user
+  router.post("/users", async (req, res) => {
     let user = req.body;
-    UsersCollection.add(user);
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.type("json").status(200).json(user);
+    let userRef = await UsersCollection.add(user);
+
+    const data = { id: userRef.id, ...user };
+    res.type("json").status(200).json(data);
   });
 
   router.get("/users/:id", (req, res) => {

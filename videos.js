@@ -1,7 +1,9 @@
 const express = require("express");
+const services = require("./config");
+const db = services.db;
 
 module.exports = (options = {}) => {
-  let videos = options.videos;
+  const VideosCollection = db.collection("Videos");
 
   const router = express.Router();
 
@@ -11,21 +13,42 @@ module.exports = (options = {}) => {
 
     res.setHeader("Access-Control-Allow-Origin", "*");
 
-    if (query.course) {
-      videos.forEach((element) => {
-        element.course == query.course ? _payLoad.push(element) : null;
+    VideosCollection.where("course", "==", course).get();
+    then((snapshot) => {
+      const data = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      res.type("json").status(200).json(data);
+    }).catch((error) => {
+      res.status(500).json({
+        general: "Something went wrong, please try again",
+        errorMessage: error,
       });
-      res.json(_payLoad);
-    } else {
-      res.json(videos);
-    }
+    });
   });
 
   router.get("/videos/:id", (req, res) => {
     let videoId = req.params.id;
-    let video = videos[videoId];
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.type("json").status(200).json(video);
+    const videoRef = VideosCollection.doc(videoId);
+
+    // Retrieve the document data
+    videoRef
+      .get()
+      .then((docSnapshot) => {
+        if (docSnapshot.exists) {
+          const data = { id: docSnapshot.id, ...docSnapshot.data() };
+          res.type("json").status(200).json(data);
+        } else {
+          res.status(404).json({ general: "Not found" });
+        }
+      })
+      .catch((error) => {
+        res.status(500).json({
+          general: "Something went wrong, please try again",
+          errorMessage: error.toString(),
+        });
+      });
   });
 
   return router;
