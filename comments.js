@@ -13,19 +13,21 @@ module.exports = (options = {}) => {
 
     res.setHeader("Access-Control-Allow-Origin", "*");
 
-    CommentsCollection.where("course", "==", course).get();
-    then((snapshot) => {
-      const data = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      res.type("json").status(200).json(data);
-    }).catch((error) => {
-      res.status(500).json({
-        general: "Something went wrong, please try again",
-        errorMessage: error,
+    CommentsCollection.where("course", "==", course)
+      .get()
+      .then((snapshot) => {
+        const data = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        res.type("json").status(200).json(data);
+      })
+      .catch((error) => {
+        res.status(500).json({
+          general: "Something went wrong, please try again",
+          errorMessage: error,
+        });
       });
-    });
   });
 
   router.post("/comments", (req, res) => {

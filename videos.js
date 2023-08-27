@@ -7,25 +7,36 @@ module.exports = (options = {}) => {
 
   const router = express.Router();
 
+  //add new video
+  router.post("/videos", async (req, res) => {
+    let video = req.body;
+    let videoRef = await VideosCollection.add(video);
+
+    const data = { id: videoRef.id, ...video };
+    res.type("json").status(200).json(data);
+  });
+
   router.get("/videos", (req, res) => {
-    let query = req.query;
+    let course = req.query;
     let _payLoad = [];
 
     res.setHeader("Access-Control-Allow-Origin", "*");
 
-    VideosCollection.where("course", "==", course).get();
-    then((snapshot) => {
-      const data = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      res.type("json").status(200).json(data);
-    }).catch((error) => {
-      res.status(500).json({
-        general: "Something went wrong, please try again",
-        errorMessage: error,
+    VideosCollection.where("course", "==", course)
+      .get()
+      .then((snapshot) => {
+        const data = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        res.type("json").status(200).json(data);
+      })
+      .catch((error) => {
+        res.status(500).json({
+          general: "Something went wrong, please try again",
+          errorMessage: error,
+        });
       });
-    });
   });
 
   router.get("/videos/:id", (req, res) => {
