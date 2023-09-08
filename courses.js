@@ -86,7 +86,7 @@ module.exports = (options = {}) => {
         });
         blobStream.on("finish", async () => {
           // Generate a storage URL for the uploaded file
-          const storageUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/${fileUpload.name}?alt=media`;
+          const storageUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${fileUpload.name}?alt=media`;
 
           return res
             .status(200)
@@ -114,7 +114,7 @@ module.exports = (options = {}) => {
 
       await file.save(fileBuffer);
 
-      const fileUrl = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
+      const fileUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${fileName}?alt=media`;
       return res.status(200).json({ fileUrl });
     } catch (error) {
       console.error("Error uploading PDF:", error);
