@@ -1,4 +1,5 @@
 const express = require("express");
+const bodyParser = require("body-parser");
 
 const coursesModule = require("./courses.js");
 const UsersModule = require("./users.js");
