@@ -107,7 +107,7 @@ module.exports = (options = {}) => {
         return res.status(400).send("No file uploaded.");
       }
 
-      const bucket = admin.storage().bucket();
+      const bucket = storage.bucket();
       const fileName = `${Date.now()}_${req.file.originalname}`;
       const file = bucket.file(fileName);
       const fileBuffer = req.file.buffer;
