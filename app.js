@@ -6,6 +6,8 @@ const VideosModule = require("./videos.js");
 const BooksModule = require("./books.js");
 const ChallengesModule = require("./challenges.js");
 const CommentsModule = require("./comments.js");
+const QuestionsModule = require("./questions.js");
+const FeedbackModule = require("./feedback.js");
 
 //import the data
 const data_file = require("./data.js");
@@ -16,10 +18,13 @@ const videos = data.all_videos;
 const books = data.all_books;
 const challenges = data.all_challenges;
 const comments = data.all_comments;
+const feedback = data.all_feedback;
 
 const app = express();
 
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 // restricting cors to paths statrting with api
 // app.use("/api", require("cors")());
 
@@ -64,6 +69,13 @@ app.use(
   "/api/",
   CommentsModule({
     comments,
+  })
+);
+
+app.use(
+  "/api/",
+  FeedbackModule({
+    feedback,
   })
 );
 

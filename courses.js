@@ -10,6 +10,8 @@ const storageConfig = multer.memoryStorage();
 const upload = multer({ storage: storageConfig });
 
 module.exports = (options = {}) => {
+  let courses = options.courses;
+
   const CoursesCollection = db.collection("Courses");
 
   const router = express.Router();
@@ -64,7 +66,7 @@ module.exports = (options = {}) => {
   });
 
   router.post(
-    "/courses/uploadImage",
+    "/courses/uploadFile",
     upload.single("file"),
     async (req, res) => {
       try {
@@ -97,6 +99,28 @@ module.exports = (options = {}) => {
       }
     }
   );
+
+  // add new topic
+  router.post("/courses/uploadPdf", upload.single("pdf"), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).send("No file uploaded.");
+      }
+
+      const bucket = admin.storage().bucket();
+      const fileName = `${Date.now()}_${req.file.originalname}`;
+      const file = bucket.file(fileName);
+      const fileBuffer = req.file.buffer;
+
+      await file.save(fileBuffer);
+
+      const fileUrl = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
+      return res.status(200).json({ fileUrl });
+    } catch (error) {
+      console.error("Error uploading PDF:", error);
+      return res.status(500).send("Error uploading PDF.");
+    }
+  });
 
   // add new course
   router.post("/courses", async (req, res) => {

@@ -484,6 +484,8 @@ let all_comments = [
   },
 ];
 
+let all_feedback = [];
+
 exports.app_data = () => {
   return {
     all_courses,
@@ -492,5 +494,6 @@ exports.app_data = () => {
     all_books,
     all_challenges,
     all_comments,
+    all_feedback,
   };
 };

@@ -70,7 +70,6 @@ module.exports = (options = {}) => {
   router.post("/users", async (req, res) => {
     let user = req.body;
     let userRef = await UsersCollection.add(user);
-
     const data = { id: userRef.id, ...user };
     res.type("json").status(200).json(data);
   });
