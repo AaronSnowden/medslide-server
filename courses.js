@@ -167,7 +167,7 @@ module.exports = (options = {}) => {
 
     course
       .update({
-        [`topics.${newTopic.key}`]: newTopic,
+        [`topics.${newTopic["key"]}`]: newTopic,
       })
       .then(() => {
         console.log("Document updated successfully");

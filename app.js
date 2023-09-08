@@ -40,7 +40,7 @@ app.use("/api", (req, res, next) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("Medslide server Homepage v3.0");
+  res.send("Medslide server Homepage v2.0");
 });
 
 app.use(
