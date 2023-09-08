@@ -1,5 +1,10 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const multer = require("multer");
+
+// Define storage for uploaded files
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 const coursesModule = require("./courses.js");
 const UsersModule = require("./users.js");
