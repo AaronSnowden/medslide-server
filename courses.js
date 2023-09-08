@@ -86,7 +86,7 @@ module.exports = (options = {}) => {
         });
         blobStream.on("finish", async () => {
           // Generate a storage URL for the uploaded file
-          const storageUrl = `https://storage.googleapis.com/${bucket.name}/${fileUpload.name}`;
+          const storageUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/${fileUpload.name}?alt=media`;
 
           return res
             .status(200)
