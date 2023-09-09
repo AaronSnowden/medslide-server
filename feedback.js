@@ -7,8 +7,8 @@ module.exports = (options = {}) => {
 
   const router = express.Router();
 
-  // get feedbacks of a specific course
-  router.get("/feedbacks", (req, res) => {
+  // get feedback of a specific course
+  router.get("/feedback", (req, res) => {
     let course = req.query.course;
     let _payLoad = [];
 

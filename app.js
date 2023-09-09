@@ -25,6 +25,7 @@ const books = data.all_books;
 const challenges = data.all_challenges;
 const comments = data.all_comments;
 const feedback = data.all_feedback;
+const questions = data.all_questions;
 
 const app = express();
 
@@ -89,6 +90,13 @@ app.use(
   "/api/",
   ChallengesModule({
     challenges,
+  })
+);
+
+app.use(
+  "/api/",
+  QuestionsModule({
+    questions,
   })
 );
 
