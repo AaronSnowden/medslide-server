@@ -132,5 +132,24 @@ module.exports = (options = {}) => {
     res.type("json").status(200).json(challenge);
   });
 
+  // set winner and isDone
+  router.post("/challenges/:id", (req, res) => {
+    let name = req.body;
+    let challengeId = req.params.id;
+    let challenge = ChallengesCollection.doc(challengeId);
+
+    challenge
+      .update({
+        winner: name,
+        isDone: true,
+      })
+      .then(() => {
+        console.log("Document updated successfully");
+      })
+      .catch((error) => {
+        console.error("Error updating document:", error);
+      });
+  });
+
   return router;
 };
