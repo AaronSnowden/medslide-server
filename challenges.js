@@ -106,10 +106,7 @@ module.exports = (options = {}) => {
       .get()
       .then((docSnapshot) => {
         if (docSnapshot.exists) {
-          const data = snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
+          const data = { id: docSnapshot.id, ...docSnapshot.data() };
           res.type("json").status(200).json(data);
         } else {
           res
@@ -120,7 +117,7 @@ module.exports = (options = {}) => {
       .catch((error) => {
         res.status(500).json({
           general: "Something went wrong, please try again",
-          errorMessage: error,
+          errorMessage: error.toString(),
         });
       });
   });
@@ -134,9 +131,11 @@ module.exports = (options = {}) => {
 
   // set winner and isDone
   router.post("/challenges/:id", (req, res) => {
-    let name = req.body;
+    let name = req.body.winner;
     let challengeId = req.params.id;
     let challenge = ChallengesCollection.doc(challengeId);
+
+    console.log(name);
 
     challenge
       .update({
@@ -144,7 +143,8 @@ module.exports = (options = {}) => {
         isDone: true,
       })
       .then(() => {
-        console.log("Document updated successfully");
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        res.type("json").status(200).json(challenge);
       })
       .catch((error) => {
         console.error("Error updating document:", error);
