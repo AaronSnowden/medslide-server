@@ -109,19 +109,14 @@ module.exports = (options = {}) => {
     userRef
       .update(newUser)
       .then((docSnapshot) => {
-        if (docSnapshot.exists) {
-          const data = docSnapshot.data();
-          res.type("json").status(200).json(data);
-        } else {
-          res
-            .status(404)
-            .json({ general: "Something went wrong, please try again" });
-        }
+        res.status(200).json({
+          general: "User updated successfully",
+        });
       })
       .catch((error) => {
         res.status(500).json({
           general: "Something went wrong, please try again",
-          errorMessage: error,
+          errorMessage: error.toString(),
         });
       });
   });
@@ -135,7 +130,7 @@ module.exports = (options = {}) => {
       // Get document references
       const userBeingFollowedRef = UsersCollection.doc(user.id);
 
-      const followerRef = UsersCollection.doc(follower.id.toString());
+      const followerRef = UsersCollection.doc(follower.id);
 
       // Update userBeingFollowed's followers list
       await userBeingFollowedRef.update({
@@ -163,7 +158,7 @@ module.exports = (options = {}) => {
       // Get document references
       const userBeingFollowedRef = UsersCollection.doc(user.id);
 
-      const followerRef = UsersCollection.doc(follower.id.toString());
+      const followerRef = UsersCollection.doc(follower.id);
 
       // Update userBeingFollowed's followers list
       await userBeingFollowedRef.update({
