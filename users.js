@@ -8,6 +8,7 @@ module.exports = (options = {}) => {
 
   const router = express.Router();
 
+  // sign in user with userName and Password
   router.get("/users", (req, res) => {
     let query = req.query;
     let userName = query.name;
@@ -49,6 +50,7 @@ module.exports = (options = {}) => {
       });
   });
 
+  // get all users
   router.get("/users/all", async (req, res) => {
     try {
       UsersCollection.get().then((snapshot) => {
@@ -74,6 +76,7 @@ module.exports = (options = {}) => {
     res.type("json").status(200).json(data);
   });
 
+  // get single user
   router.get("/users/:id", (req, res) => {
     let userId = req.params.id;
     const userRef = UsersCollection.doc(userId);
@@ -97,7 +100,8 @@ module.exports = (options = {}) => {
       });
   });
 
-  router.put("/users/:id", (req, res) => {
+  // update user
+  router.post("/users/:id", (req, res) => {
     let newUser = req.body;
     let userId = req.params.id;
     const userRef = UsersCollection.doc(userId);
