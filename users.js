@@ -8,6 +8,62 @@ module.exports = (options = {}) => {
 
   const router = express.Router();
 
+  // follow
+  router.post("/users/follow", async (req, res) => {
+    try {
+      const user = req.body.user; // User being followed
+      const follower = req.body.follower; // Follower
+
+      // Get document references
+      const userBeingFollowedRef = UsersCollection.doc(user.id);
+
+      const followerRef = UsersCollection.doc(follower.id);
+
+      // Update userBeingFollowed's followers list
+      await userBeingFollowedRef.update({
+        followers: admin.firestore.FieldValue.arrayUnion(follower.name),
+      });
+
+      // Update follower's followees list
+      await followerRef.update({
+        followees: admin.firestore.FieldValue.arrayUnion(user.name),
+      });
+
+      res.status(200).json({ message: "Success" }); // Send a response indicating success
+    } catch (error) {
+      console.error("Error updating document:", error);
+      res.status(500).json({ message: "Error occurred" }); // Send an error response
+    }
+  });
+
+  // unfollow
+  router.post("/users/unfollow", async (req, res) => {
+    try {
+      const user = req.body.user; // User being unfollowed
+      const follower = req.body.follower; // Follower
+
+      // Get document references
+      const userBeingFollowedRef = UsersCollection.doc(user.id);
+
+      const followerRef = UsersCollection.doc(follower.id);
+
+      // Update userBeingFollowed's followers list
+      await userBeingFollowedRef.update({
+        followers: admin.firestore.FieldValue.arrayRemove(follower.name),
+      });
+
+      // Update follower's followees list
+      await followerRef.update({
+        followees: admin.firestore.FieldValue.arrayRemove(user.name),
+      });
+
+      res.status(200).json({ message: "Success" }); // Send a response indicating success
+    } catch (error) {
+      console.error("Error updating document:", error);
+      res.status(500).json({ message: "Error occurred" }); // Send an error response
+    }
+  });
+
   // sign in user with userName and Password
   router.get("/users", (req, res) => {
     let query = req.query;
@@ -119,62 +175,6 @@ module.exports = (options = {}) => {
           errorMessage: error.toString(),
         });
       });
-  });
-
-  // follow
-  router.post("/users/follow", async (req, res) => {
-    try {
-      const user = req.body.user; // User being followed
-      const follower = req.body.follower; // Follower
-
-      // Get document references
-      const userBeingFollowedRef = UsersCollection.doc(user.id);
-
-      const followerRef = UsersCollection.doc(follower.id);
-
-      // Update userBeingFollowed's followers list
-      await userBeingFollowedRef.update({
-        followers: admin.firestore.FieldValue.arrayUnion(follower.name),
-      });
-
-      // Update follower's followees list
-      await followerRef.update({
-        followees: admin.firestore.FieldValue.arrayUnion(user.name),
-      });
-
-      res.status(200).json({ message: "Success" }); // Send a response indicating success
-    } catch (error) {
-      console.error("Error updating document:", error);
-      res.status(500).json({ message: "Error occurred" }); // Send an error response
-    }
-  });
-
-  // unfollow
-  router.post("/users/unfollow", async (req, res) => {
-    try {
-      const user = req.body.user; // User being followed
-      const follower = req.body.follower; // Follower
-
-      // Get document references
-      const userBeingFollowedRef = UsersCollection.doc(user.id);
-
-      const followerRef = UsersCollection.doc(follower.id);
-
-      // Update userBeingFollowed's followers list
-      await userBeingFollowedRef.update({
-        followers: admin.firestore.FieldValue.arrayRemove(follower.name),
-      });
-
-      // Update follower's followees list
-      await followerRef.update({
-        followees: admin.firestore.FieldValue.arrayRemove(user.name),
-      });
-
-      res.status(200).json({ message: "Success" }); // Send a response indicating success
-    } catch (error) {
-      console.error("Error updating document:", error);
-      res.status(500).json({ message: "Error occurred" }); // Send an error response
-    }
   });
 
   return router;
