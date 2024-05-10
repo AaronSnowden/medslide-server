@@ -183,12 +183,18 @@ module.exports = (options = {}) => {
     let topicId = req.body.topicId;
     let filePath = req.body.filePath;
 
-    // Specify the path to the nested document you want to delete
-    const nestedDocumentPath = `Courses/${courseId}/topics/${topicId}`;
+    // Specify the path to the parent document
+    const parentDocumentPath = `Courses/${courseId}`;
+    // Get a reference to the parent document
+    const parentDocumentRef = db.doc(parentDocumentPath);
+    // Specify the nested document to delete
+    const nestedDocumentId = topicId;
 
     // Delete the nested document
-    db.doc(nestedDocumentPath)
-      .delete()
+    parentDocumentRef
+      .update({
+        [`topics.${nestedDocumentId}`]: admin.firestore.FieldValue.delete(),
+      })
       .then(() => {
         const bucket = storage.bucket(); // Specify the path to the file you want to delete
 
