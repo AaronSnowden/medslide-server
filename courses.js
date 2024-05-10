@@ -179,3 +179,39 @@ module.exports = (options = {}) => {
 
   return router;
 };
+
+// delete topic
+router.delete("/courses/topics/", (req, res) => {
+  let courseId = req.body.courseId;
+  let topicId = req.body.topicId;
+  let filePath = req.body.filePath;
+
+  // Specify the parent document and the nested document to delete
+  const parentDocumentId = courseId;
+  const nestedDocumentId = topicId;
+  // Delete the nested document
+  db.collection("Courses")
+    .doc(parentDocumentId)
+    .update({ [nestedDocumentId]: admin.firestore.FieldValue.delete() })
+    .then(() => {
+      console.log("Nested document successfully deleted");
+      // delete the pdf file
+      // Get a reference to the Cloud Storage bucket
+      const bucket = storage.bucket(); // Specify the path to the file you want to delete
+
+      bucket
+        .file(filePath)
+        .delete()
+        .then(() => {
+          res.status(200).send("File successfully deleted");
+        })
+        .catch((error) => {
+          console.error("Error deleting file:", error);
+          res.status(500).send("Error deleting file");
+        });
+    })
+    .catch((error) => {
+      console.error("Error deleting nested document:", error);
+      res.status(500).send("Error deleting file");
+    });
+});
