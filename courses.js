@@ -3,6 +3,7 @@ const multer = require("multer");
 
 const services = require("./config");
 const db = services.db;
+const admin = services.admin;
 const storage = services.storage;
 
 // Multer storage configuration
