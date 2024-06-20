@@ -64,6 +64,36 @@ module.exports = (options = {}) => {
     }
   });
 
+  // get single user by email
+  router.get("/users/email", (req, res) => {
+    let userEmail = req.query.email;
+    const userRef = UsersCollection.where("email", "==", userEmail);
+
+    //filter UsersCollection by email property
+
+    // Retrieve the document data
+    userRef
+      .get()
+      .then((docSnapshot) => {
+        console.log(docSnapshot.docs);
+        if (!docSnapshot.empty) {
+          const userDoc = docSnapshot.docs[0];
+          const userData = userDoc.data();
+
+          const data = { id: docSnapshot.id, ...userData };
+          res.type("json").status(200).json(data);
+        } else {
+          res.status(404).json({ general: "Not found" });
+        }
+      })
+      .catch((error) => {
+        res.status(500).json({
+          general: "Something went wrong, please try again",
+          errorMessage: error.toString(),
+        });
+      });
+  });
+
   // sign in user with userName and Password
   router.get("/users", (req, res) => {
     let query = req.query;
