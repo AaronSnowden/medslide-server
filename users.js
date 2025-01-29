@@ -186,6 +186,26 @@ module.exports = (options = {}) => {
       });
   });
 
+  // Route to update user FCM token
+  router.post("/user/token", async (req, res) => {
+    try {
+      const { userId, fcmToken } = req.body;
+      console.log(req.body);
+
+      const userRef = UsersCollection.doc(userId);
+
+      await userRef.update({ fcmToken });
+
+      res.status(200).json({ success: true });
+    } catch (error) {
+      console.error("Error updating FCM token:", error);
+      res.status(500).json({
+        success: false,
+        error: error.message,
+      });
+    }
+  });
+
   // update user
   router.post("/users/:id", (req, res) => {
     let newUser = req.body;

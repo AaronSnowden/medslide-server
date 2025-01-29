@@ -2,8 +2,11 @@ const express = require("express");
 
 const services = require("./config");
 const db = services.db;
+const NotificationService = require("./notification-service");
 
 module.exports = (options = {}) => {
+  const notificationService = new NotificationService(db, services.fcm);
+
   let ChallengesCollection = db.collection("Challenges");
 
   const router = express.Router();
@@ -122,11 +125,34 @@ module.exports = (options = {}) => {
       });
   });
 
-  router.post("/challenges", (req, res) => {
-    let challenge = req.body;
-    ChallengesCollection.add(challenge);
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.type("json").status(200).json(challenge);
+  router.post("/challenges", async (req, res) => {
+    try {
+      let challenge = req.body;
+      ChallengesCollection.add(challenge);
+
+      let receiverId = challenge.challengee.id;
+
+      if (!challenge.challengeeResults == -1) {
+        // Send notification
+        await notificationService.sendNotification(receiverId, {
+          title: "New Challenge Request!",
+          body: `${challenge.challengerName} has challenged you to a ${challenge.weapon} quiz!`,
+          data: challenge,
+        });
+        console.log("notification sent");
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        res.type("json").status(200).json(challenge);
+      }
+
+      res.setHeader("Access-Control-Allow-Origin", "*");
+      res.type("json").status(200).json(challenge);
+    } catch (error) {
+      console.error("Error creating challenge:", error);
+      res.status(500).json({
+        success: false,
+        error: error.message,
+      });
+    }
   });
 
   // set winner and isDone

@@ -10,5 +10,6 @@ admin.initializeApp({
 
 var db = admin.firestore();
 var storage = admin.storage();
+var fcm = admin.messaging();
 
-module.exports = { admin, db, storage };
+module.exports = { admin, db, storage, fcm };
