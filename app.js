@@ -14,6 +14,7 @@ const ChallengesModule = require("./challenges.js");
 const CommentsModule = require("./comments.js");
 const QuestionsModule = require("./questions.js");
 const FeedbackModule = require("./feedback.js");
+const getOAuthToken = require("./oauth.js");
 
 //import the data
 const data_file = require("./data.js");
@@ -41,7 +42,13 @@ app.use("/api", (req, res, next) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("Medslide server Homepage v2.0");
+  res.send("Medslide server Homepage v3.0");
+});
+
+app.get("/api/authtoken", async (req, res) => {
+  res.send({
+    "auth-token": await getOAuthToken(),
+  });
 });
 
 app.use(
