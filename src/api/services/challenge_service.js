@@ -1,3 +1,4 @@
+const { json } = require("express");
 const { ChallengesCollection } = require("../models/challenge_model");
 
 // Get all challenges
@@ -47,12 +48,14 @@ async function getChallengeById(challengeId) {
 // Create a challenge
 async function createChallenge(challenge, notificationService) {
   await ChallengesCollection.add(challenge);
-  const receiverId = challenge.challengee.id;
+  const receiverId = JSON.parse(challenge.challengee).id;
 
   if (challenge.challengeeResults !== -1) {
     await notificationService.sendNotification(receiverId, {
       title: "New Challenge Request!",
-      body: `${challenge.challengerName} has challenged you to a ${challenge.weapon} quiz!`,
+      body: `${JSON.parse(challenge.challenger).name} has challenged you to a ${
+        challenge.weapon
+      } quiz!`,
       data: challenge,
     });
     console.log("Notification sent");

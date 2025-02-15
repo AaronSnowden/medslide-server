@@ -26,7 +26,13 @@ const UserService = {
   },
 
   async createUser(user) {
-    return await UserModel.createUser(user);
+    // check if user's email exists already in the db
+    var temp_user = await this.getUserByEmail(user.email);
+    if (temp_user) {
+      return temp_user;
+    } else {
+      return await UserModel.createUser(user);
+    }
   },
 
   async updateUser(userId, userData) {

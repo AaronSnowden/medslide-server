@@ -6,7 +6,7 @@ var serviceAccount = require("./med-slide-firebase-adminsdk-nkm5n-8dbb5f3644.jso
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: process.env.APP_BASE_URL,
-  storageBucket: process.env.APP_BUCKET_URL,
+  storageBucket: process.env.APP_STORAGE_BUCKET,
 });
 
 var db = admin.firestore();

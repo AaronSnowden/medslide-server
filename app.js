@@ -1,8 +1,11 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const services = require("./src/config/config.js");
 
 const getOAuthToken = require("./src/api/domains/auth/oauth.js");
 const getAppMetadata = require("./src/api/domains/metadata/metadata.js");
+const NotificationService = require("./src/util/notification-service");
+const notificationService = new NotificationService(services.db, services.fcm);
 
 const userRoutes = require("./src/api/domains/users/routes.js");
 const courseRoutes = require("./src/api/domains/courses/routes.js");
@@ -33,6 +36,12 @@ app.get("/", (req, res) => {
 app.get("/api/authtoken", async (req, res) => {
   res.send({
     "auth-token": await getOAuthToken(),
+  });
+});
+
+app.post("/api/fcmtokenvalid", async (req, res) => {
+  res.status(200).send({
+    "is-valid": await notificationService.checkFcmTokenValidity(req.body.token),
   });
 });
 

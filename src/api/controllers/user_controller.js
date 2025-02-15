@@ -82,8 +82,10 @@ const UserController = {
     try {
       const user = req.body;
       const newUser = await UserService.createUser(user);
-      res.status(201).json(newUser);
+      res.status(200).json(newUser);
     } catch (error) {
+      console.log(error.toString());
+
       res
         .status(500)
         .json({ message: "Error creating user", error: error.toString() });

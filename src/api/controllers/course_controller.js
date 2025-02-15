@@ -54,6 +54,8 @@ async function uploadPdf(req, res) {
     const fileUrl = await courseService.uploadFileToStorage(req.file, storage);
     res.status(200).json({ fileUrl });
   } catch (error) {
+    console.log(error);
+
     res.status(500).json({ error: error.message });
   }
 }
