@@ -8,6 +8,7 @@ async function getChallenges(req, res) {
   try {
     const user = req.query.user;
     const challenges = await ChallengeService.getUserChallenges(user);
+
     res.status(200).json(challenges);
   } catch (error) {
     res.status(500).json({ error: error.message });

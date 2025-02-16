@@ -34,7 +34,7 @@ class NotificationService {
 
       // Handle other errors if needed
       console.error("Error sending message:", error);
-      return "false"; // Also return false for unknown errors
+      return false; // Also return false for unknown errors
     }
   }
 
