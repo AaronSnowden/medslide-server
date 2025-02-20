@@ -23,8 +23,17 @@ async function addQuestion(question) {
   return question;
 }
 
+// Add bulk questions
+async function uploadQuestions(questions) {
+  questions.forEach(async (question) => {
+    await addQuestion(question);
+  });
+  return questions;
+}
+
 module.exports = {
   getQuestionsByCourse,
   getQuestionById,
+  uploadQuestions,
   addQuestion,
 };

@@ -7,15 +7,31 @@ describe("Challenges API", () => {
   // Test creating a new challenge
   it("should create a new challenge", async () => {
     const newChallenge = {
-      challenger: { name: "UserA", id: "123" },
-      challengee: { name: "UserB", id: "456" },
-      weapon: "Quiz",
+      id: "some-gen-id",
+      time: "time of challenge",
+      questions: [],
+      challengerResults: 10,
+      challengeeResults: 16,
+      challenger: { id: "123", name: "UserA", xps: 12 },
+      challengee: { id: "456", name: "UserB", xps: 10 },
+      weapon: "course",
       isDone: false,
+      winner: "challenge winner",
     };
     const res = await request(app).post("/challenges").send(newChallenge);
     expect(res.statusCode).toBe(201);
     expect(res.body).toHaveProperty("id");
     challengeId = res.body.id;
+  });
+
+  // Test should fetch challenges of a given user
+  it("should fetch challenges for a single user", async () => {
+    const res = await request(app).get(
+      "/challenges?user=aaronSnowden300@gmail.com"
+    );
+
+    expect(res.statusCode).toBe(200);
+    expect(Array.isArray(res.body)).toBeTruthy();
   });
 
   // Test fetching all challenges
@@ -27,8 +43,11 @@ describe("Challenges API", () => {
 
   // Test fetching settled challenges
   it("should fetch settled challenges", async () => {
-    const res = await request(app).get("/challenges/settled");
+    const res = await request(app).get(
+      "/challenges/settled?user=aaronSnowden300@gmail.com"
+    );
     expect(res.statusCode).toBe(200);
+    expect(Array.isArray(res.body)[0]).toHaveProperty("isDone", true);
     expect(Array.isArray(res.body)).toBeTruthy();
   });
 

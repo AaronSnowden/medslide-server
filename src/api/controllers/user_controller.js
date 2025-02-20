@@ -92,6 +92,16 @@ const UserController = {
     }
   },
 
+  async deleteUser(req, res) {
+    try {
+      const userId = req.params.id;
+      await UserService.deleteUser(userId);
+      res.status(200).json({ message: "success" });
+    } catch (error) {
+      console.log(error.toString());
+    }
+  },
+
   async updateUser(req, res) {
     try {
       const userId = req.params.id;

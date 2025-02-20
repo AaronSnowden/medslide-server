@@ -1,4 +1,6 @@
 const express = require("express");
+const cors = require("cors");
+
 const bodyParser = require("body-parser");
 const services = require("./src/config/config.js");
 
@@ -21,11 +23,19 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// restricting cors to paths statrting with api
-// app.use("/api", require("cors")());
+// Allow all origins and methods
+app.use(
+  cors({
+    origin: "*", // Adjust this to restrict access (e.g., "http://localhost:8080")
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
+app.options("*", cors()); // Allow preflight requests
 
 app.use("/api", (req, res, next) => {
-  res.header("Access-Control-Allow-OrIgin", "*");
+  res.header("Access-Control-Allow-Origin", "*");
   next();
 });
 

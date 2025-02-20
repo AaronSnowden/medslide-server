@@ -68,6 +68,10 @@ const UserModel = {
     return { id: userRef.id, ...user };
   },
 
+  async deleteUser(id) {
+    await UsersCollection.doc(id).delete();
+  },
+
   async updateUser(userId, userData) {
     await UsersCollection.doc(userId).update(userData);
   },

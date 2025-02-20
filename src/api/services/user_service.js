@@ -35,6 +35,10 @@ const UserService = {
     }
   },
 
+  async deleteUser(userId) {
+    return await UserModel.deleteUser(userId);
+  },
+
   async updateUser(userId, userData) {
     await UserModel.updateUser(userId, userData);
   },

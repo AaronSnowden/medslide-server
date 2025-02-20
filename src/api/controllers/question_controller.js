@@ -28,8 +28,19 @@ async function createQuestion(req, res) {
   }
 }
 
+async function uploadQuestions(req, res) {
+  try {
+    let questions = req.body.questions;
+    await QuestionService.uploadQuestions(questions);
+    res.status(201).json({ message: "questions added" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
 module.exports = {
   getQuestions,
   getQuestionById,
+  uploadQuestions,
   createQuestion,
 };
