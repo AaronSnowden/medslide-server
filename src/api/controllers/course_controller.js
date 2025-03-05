@@ -75,6 +75,7 @@ async function updateCourseTopic(req, res) {
 async function deleteCourseTopic(req, res) {
   try {
     const { courseId, topicId, filePath } = req.body;
+
     const response = await courseService.deleteCourseTopic(
       courseId,
       topicId,
