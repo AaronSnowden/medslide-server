@@ -1,10 +1,17 @@
 const QuestionService = require("../services/questions_service");
 
+function getRandomObjects(list) {
+  if (list.length <= 5) return list; // Return all if list has 5 or fewer items
+
+  let shuffled = [...list].sort(() => Math.random() - 0.5); // Shuffle array
+  return shuffled.slice(0, 5); // Get first 5 items
+}
+
 async function getQuestions(req, res) {
   try {
     const course = req.query.course;
     const questions = await QuestionService.getQuestionsByCourse(course);
-    res.status(200).json(questions);
+    res.status(200).json(getRandomObjects(questions));
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
